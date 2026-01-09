@@ -21,6 +21,9 @@
 
 .body {
   background: var(--body-background);
+  width: 100%;
+  height: 100%;
+
 }
 .hidden {
   display: none;
@@ -31,13 +34,13 @@
 }
 
 .init {
-  box-shadow: 0 0 10px rgba(0, 0, 0, 1);
+  box-shadow: 0 0 0.5em rgba(0, 0, 0, 1);
   padding: 1em;
   flex-direction: column;
   align-items: center;
   background-color: var(--main-color);
   color: #ffff;
-  inline-size: 50em;
+  width: 50em;
   margin: auto;
   margin-top: 1em;
   border-radius: 0.5em;
@@ -51,7 +54,7 @@
 
 .settings {
   display: flex;
-  inline-size: 100%;
+  width: 100%;
   gap: 1em;
 }
 
@@ -75,7 +78,7 @@
   border: 0.1em solid #000070;
   flex-direction: column;
   align-items: center;
-  inline-size: 100%;
+  width: 100%;
   margin-bottom: 2em;
 }
 
@@ -84,7 +87,7 @@
   -moz-appearance: none;
   appearance: none;
   position: relative;
-  inline-size: 100%;
+  width: 100%;
   cursor: pointer;
   background-color: var(--select-color);
   border-radius: 0.2em;
@@ -103,7 +106,7 @@
   -moz-appearance: none;
   appearance: none;
   cursor: pointer;
-  inline-size: 30em;
+  width: 30em;
   background-color: var(--accent-color);
   border-style: none;
   border-radius: 0.5em;
@@ -126,7 +129,7 @@
   margin-top: 1em;
   gap: 1em;
   background-color: var(--accent-color);
-  inline-size: 100%;
+  width: 100%;
   padding: 1em;
   border-radius: 0.5em;
   border: 0.1em solid var(--lighten-accent-color);
@@ -134,7 +137,7 @@
 
 .border_best {
   background-color: var(--lighten-accent-color);
-  inline-size: 100%;
+  width: 100%;
   padding: 0.5em;
   border-radius: 0.5em;
   border: 0.1em solid rgba(255, 255, 255, 0.7);
@@ -145,7 +148,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  inline-size: 100%;
+  width: 100%;
 }
 
 .game_border {
@@ -166,8 +169,8 @@
 }
 
 .card {
-  inline-size: 5em;
-  block-size: 5em;
+  width: 5em;
+  height: 5em;
   list-style: none;
   perspective: 100em;
   cursor: pointer;
@@ -178,8 +181,8 @@
 }
 
 .card_inner {
-  inline-size: 100%;
-  block-size: 100%;
+  width: 100%;
+  height: 100%;
   position: relative;
   transform-style: preserve-3d;
   transition: transform 0.5s ease-in-out;
@@ -191,8 +194,8 @@
 
 .card_front,
 .card_back {
-  inline-size: 100%;
-  block-size: 100%;
+  width: 100%;
+  height: 100%;
   position: absolute;
   backface-visibility: hidden;
   display: flex;
@@ -215,6 +218,6 @@
 
 .main_cur {
   display: flex;
-  inline-size: 100%;
+  width: 100%;
   gap: 1em
 }
