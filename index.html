@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0" />
+    <title>Игра память</title>
+    <link
+      rel="stylesheet"
+      href="./style.css" />
+  </head>
+  <body class="body">
+    <div id="init_settings" class="init show">
+      <h2 class="game_name">Игра "Память"</h2>
+      <form class="settings">
+        <div class="type_settings">
+          <label for="game_mode" class="text_subtitle">Режим игры</label>
+          <select id="game_mode" class="selections_of_choice text_low">
+            <option value="simple" selected>Простой</option>
+            <option value="tries">На количество попыток</option>
+            <option value="times">На время</option>
+          </select>
+        </div>
+        <div class="type_settings">
+          <label for="difficulty_level" class="text_subtitle">Уровень сложности</label>
+          <select id="difficulty_level" class="selections_of_choice text_low">
+            <option value="easy" selected>Лёгкий</option>
+            <option value="medium">Средний</option>
+            <option value="hard">Сложный</option>
+          </select>
+        </div>
+      </form>
+      <button id="game_start" class="button">Начать игру</button>
+      <div id="best_results" class="border show">
+        <h3 class="text_subtitle">Лучшие результаты</h3>
+        <div class="border_best">
+          Нет результатов
+        </div>
+      </div>
+    </div>
+    <div id="game" class="init hidden">
+      <h2 id="type_game" class="game_name"></h2>
+      <div class="main_cur">
+        <div id="cur_result" class="border show">
+          <div id="count_pairs" class="text_low"></div>
+        </div>
+        <div id="cur_result" class="border hidden">
+          <div id="cur_time" class="text_low"></div>
+        </div>
+      </div>
+      <div class="game_main_border">
+        <ul class="game_border easy">
+        </ul>
+      </div>
+      <div class="settings">
+        <button id="reset_button" class="button">Сначала</button>
+        <button id="reset_settings" class="button">Сменить режим</button>
+      </div>
+    </div>
+    <div id="results" class="init hidden">
+      <h2 id="type_game" class="game_name">Результаты</h2>
+      <h3 id="title_result">Вы проиграли</h3>
+      <div id="results_itog" class="border show">
+        <div class="text_subtitle">Ваш результат</div>
+        <div id="itog_time" class="text_low"></div>
+        <div class="text_subtitle">Ваш рекорд</div>
+        <div id="record" class="text_low"></div>
+      </div>
+      <div class="settings">
+        <button id="reset_from_results" class="button">Сначала</button>
+        <button id="change_mode_from_results" class="button">Сменить режим</button>
+      </div>
+    </div>
+    <script
+      type="text/javascript"
+      src="./game.js" defer></script>
+    <template id="card_template">
+      <li class="card">
+        <div class="card_inner">
+          <div class="card_front"></div>
+          <div class="card_back"></div>
+        </div>
+      </li>
+    </template>
+  </body>
+</html>

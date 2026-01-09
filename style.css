@@ -1,0 +1,220 @@
+/* Базовые стили */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+
+  --main-color: rgba(8, 12, 22, 0.862);
+  --lighten-main-color: rgba(11, 20, 42, 0.775);
+  --card-front-color: #293852;
+  --accent-color: #0f1f4a;
+  /* также используется для цвета задней стороны карточки */
+  --lighten-accent-color: #2f5eac;
+  /* также используется для цвета перевернутой карточки */
+  --select-color: #162859;
+  --body-background: linear-gradient(135deg,
+      var(--lighten-main-color) 100%,
+      var(--main-color) 0%);
+}
+
+
+.body {
+  background: var(--body-background);
+}
+.hidden {
+  display: none;
+}
+
+.show {
+  display: flex;
+}
+
+.init {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 1);
+  padding: 1em;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--main-color);
+  color: #ffff;
+  inline-size: 50em;
+  margin: auto;
+  margin-top: 1em;
+  border-radius: 0.5em;
+  gap: 1em;
+  font-family: inherit;
+}
+
+.game_name {
+  font-size: 2.5em;
+}
+
+.settings {
+  display: flex;
+  inline-size: 100%;
+  gap: 1em;
+}
+
+.text_subtitle {
+  font-family: inherit;
+  font-weight: bolder;
+  font-size: 1.25em;
+}
+
+.text_low {
+  font-family: inherit;
+  font-size: 1em;
+}
+
+.type_settings {
+  background-color: #050a30;
+  padding: 0.5em;
+  gap: 0.5em;
+  display: flex;
+  border-radius: 0.5em;
+  border: 0.1em solid #000070;
+  flex-direction: column;
+  align-items: center;
+  inline-size: 100%;
+  margin-bottom: 2em;
+}
+
+.selections_of_choice {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  position: relative;
+  inline-size: 100%;
+  cursor: pointer;
+  background-color: var(--select-color);
+  border-radius: 0.2em;
+  border: 0.1em solid var(--lighten-accent-color);
+  padding: 0.5em;
+  color: inherit;
+  background-image: url(https://img.icons8.com/?size=100&id=39788&format=png&color=FFFFFF);
+  background-size: 1em;
+  background-repeat: no-repeat;
+  background-position: center right 1em;
+  font-family: inherit;
+}
+
+.button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  inline-size: 30em;
+  background-color: var(--accent-color);
+  border-style: none;
+  border-radius: 0.5em;
+  border: 0.05em solid var(--lighten-accent-color);
+  color: inherit;
+  padding: 0.5em;
+  font-family: inherit;
+  font-weight: inherit;
+  font-size: 1.25em;
+}
+
+.button:hover {
+  background-color: var(--lighten-accent-color);
+}
+
+.border {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1em;
+  gap: 1em;
+  background-color: var(--accent-color);
+  inline-size: 100%;
+  padding: 1em;
+  border-radius: 0.5em;
+  border: 0.1em solid var(--lighten-accent-color);
+}
+
+.border_best {
+  background-color: var(--lighten-accent-color);
+  inline-size: 100%;
+  padding: 0.5em;
+  border-radius: 0.5em;
+  border: 0.1em solid rgba(255, 255, 255, 0.7);
+}
+
+.game_main_border {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  inline-size: 100%;
+}
+
+.game_border {
+  display: grid;
+  gap: 0.5em;
+}
+
+.easy {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.medium {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.hard {
+  grid-template-columns: repeat(6, 1fr);
+}
+
+.card {
+  inline-size: 5em;
+  block-size: 5em;
+  list-style: none;
+  perspective: 100em;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;    
+  -ms-user-select: none;     
+  user-select: none; 
+}
+
+.card_inner {
+  inline-size: 100%;
+  block-size: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease-in-out;
+}
+
+.card.flipped .card_inner {
+  transform: rotateY(180deg);
+}
+
+.card_front,
+.card_back {
+  inline-size: 100%;
+  block-size: 100%;
+  position: absolute;
+  backface-visibility: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card_front {
+  z-index: 2;
+  background-color: var(--accent-color);
+}
+
+.card_back {
+  z-index: 1;
+  background-color: var(--lighten-accent-color);
+  transform: rotateY(180deg);
+  font-size: 2.5em;
+}
+
+
+.main_cur {
+  display: flex;
+  inline-size: 100%;
+  gap: 1em
+}
