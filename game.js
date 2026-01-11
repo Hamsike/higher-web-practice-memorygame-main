@@ -3,7 +3,6 @@ const INIT_GAME = document.querySelector('#game');
 const CHOICE_OF_TYPE = document.querySelector('#game_mode');
 const CHOICE_OF_DIFFICULTY = document.querySelector('#difficulty_level');
 const GAME_TYPE_TITILE = document.querySelector('#type_game');
-const buttons = document.querySelectorAll('.button');
 const BUTTON_START = document.querySelector('.startGame');
 const BUTTON_RESTART = document.querySelectorAll('.buttonRestart');
 const BUTTON_RESTART_SETTINGS = document.querySelectorAll('.buttonChangeMode');
