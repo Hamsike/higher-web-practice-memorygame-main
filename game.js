@@ -4,6 +4,9 @@ const CHOICE_OF_TYPE = document.querySelector('#game_mode');
 const CHOICE_OF_DIFFICULTY = document.querySelector('#difficulty_level');
 const GAME_TYPE_TITILE = document.querySelector('#type_game');
 const buttons = document.querySelectorAll('.button');
+const BUTTON_START = document.querySelector('.startGame');
+const BUTTON_RESTART = document.querySelectorAll('.buttonRestart');
+const BUTTON_RESTART_SETTINGS = document.querySelectorAll('.buttonChangeMode');
 const BEST_RESULTS = document.querySelector('#best_results');
 const GAME_BORDER = document.querySelector('.game_border');
 const CARD_TEMPLATE = document.querySelector('#card_template');
@@ -18,27 +21,20 @@ const BORDER_BEST = BEST_RESULTS.querySelector('.border_best');
 const RECORD = RESULTS.querySelector('#record');
 
 
-let FLIPPED_CARDS = [];
-let count_flipped = 0;
+let flippedCards = [];
+let countFlipped = 0;
 let curTime = 0;
-let interval_id = null;
-let cur_attempts = 0;
-let run_game = true;
+let intevalId = null;
+let curAttempts = 0;
+let runGame = true;
 
-buttons.forEach(button =>
-  {
-    button.addEventListener('click', el => {
-      classList = el.target.classList;
-      if (classList.contains('startGame')) {
-        startGame();
-      } else if (classList.contains('buttonRestart')) {
-        resetGame();
-      } else if (classList.contains('buttonChangeMode')) {
-        game();
-      };
-    });
-  }
-)
+BUTTON_START.addEventListener('click', startGame);
+BUTTON_RESTART.forEach(button => {
+  button.addEventListener('click', resetGame);
+});
+BUTTON_RESTART_SETTINGS.forEach(button => {
+  button.addEventListener('click', game);
+});
 CHOICE_OF_TYPE.addEventListener('change', loadBestScores);
 CHOICE_OF_DIFFICULTY.addEventListener('change', loadBestScores);
 
@@ -96,14 +92,14 @@ function game() {
 }
 // Функция начала игры
 function startGame() {
-  FLIPPED_CARDS = [];
+  flippedCards = [];
   GAME_BORDER.innerHTML = '';
-  count_flipped = 0;
-  clearInterval(interval_id);
-  interval_id = null;
+  countFlipped = 0;
+  clearInterval(intevalId);
+  intevalId = null;
   CUR_RESULT.textContent = 'Найдено пар: 0';
   CUR_TIME.textContent = '';
-  run_game = true;
+  runGame = true;
   curTime = 0;
   if (CHOICE_OF_TYPE.value === 'times') {
     DOP_WINDOW.classList.replace('hidden', 'show');
@@ -112,8 +108,8 @@ function startGame() {
     CUR_TIME.textContent = `Оставшееся количество времени: ${minutes}:${seconds}`;
   } else if (CHOICE_OF_TYPE.value === 'tries') {
     DOP_WINDOW.classList.replace('hidden', 'show');
-    cur_attempts = DIFFICULTY_SETTINGS[CHOICE_OF_DIFFICULTY.value].attempts;
-    CUR_TIME.textContent = `Оставшееся количество попыток: ${cur_attempts}`;
+    curAttempts = DIFFICULTY_SETTINGS[CHOICE_OF_DIFFICULTY.value].attempts;
+    CUR_TIME.textContent = `Оставшееся количество попыток: ${curAttempts}`;
   } else {
     DOP_WINDOW.classList.replace('show', 'hidden');
   }
@@ -167,70 +163,70 @@ function flipCard(card) {
     return;
   }
   parent.classList.add('flipped');
-  FLIPPED_CARDS.push(parent);
+  flippedCards.push(parent);
   if (CHOICE_OF_TYPE.value === 'times' || CHOICE_OF_TYPE.value === 'simple') {
     updateTimeDisplay();
   };
-  count_flipped++;
+  countFlipped++;
   if (CHOICE_OF_TYPE.value === 'tries') {
-    if (FLIPPED_CARDS.length % 2 === 0) {
-      cur_attempts--;
+    if (flippedCards.length % 2 === 0) {
+      curAttempts--;
     }
-    CUR_TIME.textContent = `Оставшееся количество попыток: ${cur_attempts}`;
+    CUR_TIME.textContent = `Оставшееся количество попыток: ${curAttempts}`;
   };
 
   parent
     .querySelector('.card_inner')
     .addEventListener('transitionend', checkMatch);
-  if (FLIPPED_CARDS.length % 2 !== 0) {
+  if (flippedCards.length % 2 !== 0) {
     return;
   }
-  const [prelastCard, lastCard] = FLIPPED_CARDS.slice(-2);
+  const [prelastCard, lastCard] = flippedCards.slice(-2);
   if (prelastCard.textContent !== lastCard.textContent) {
-    FLIPPED_CARDS = FLIPPED_CARDS.slice(0, FLIPPED_CARDS.length - 2);
+    flippedCards = flippedCards.slice(0, flippedCards.length - 2);
     setTimeout(() => {
       [lastCard, prelastCard].forEach(card => {
         card.classList.remove('flipped');
-        count_flipped--;
+        countFlipped--;
       });
     }, FLIPPED_CARDS_TIMEOUT);
   } else {
-    CUR_RESULT.textContent = `Найдено пар: ${Math.floor(count_flipped / 2)}`
+    CUR_RESULT.textContent = `Найдено пар: ${Math.floor(countFlipped / 2)}`
   }
 }
 // Чек матча на возможность победы и конца количества попыток
 function checkMatch() {
   const flippedcards = document.querySelectorAll('.flipped');
     if (flippedcards.length === DIFFICULTY_SETTINGS[CHOICE_OF_DIFFICULTY.value].pairs * 2) {
-      clearInterval(interval_id);
-      endGame(true, Math.floor(count_flipped / 2), curTime);
-      run_game = false;
+      clearInterval(intevalId);
+      endGame(true, Math.floor(countFlipped / 2), curTime);
+      runGame = false;
     };
-    if (cur_attempts === 0 && run_game && CHOICE_OF_TYPE.value === 'tries') {
-      endGame(false, Math.floor(count_flipped / 2));
-      run_game = false;
+    if (curAttempts === 0 && runGame && CHOICE_OF_TYPE.value === 'tries') {
+      endGame(false, Math.floor(countFlipped / 2));
+      runGame = false;
     }
 }
 // Оюновление таймера для режима на время и создание секундомера для обычного режима
 function updateTimeDisplay() {
-  if (!interval_id && CHOICE_OF_TYPE.value === 'simple') {
-    interval_id = setInterval(() => {
+  if (!intevalId && CHOICE_OF_TYPE.value === 'simple') {
+    intevalId = setInterval(() => {
     curTime++;
 }, 1000);
   }
 
-  if (!interval_id) {
-    interval_id = setInterval(() => {
+  if (!intevalId) {
+    intevalId = setInterval(() => {
     curTime--;
     const [minutes, seconds] = time_calc(curTime);
     CUR_TIME.textContent = `Оставшееся количество времени: ${minutes}:${seconds}`;
 
 
-    if (curTime < 0 && run_game) {
+    if (curTime < 0 && runGame) {
         CUR_TIME.textContent = `Оставшееся количество времени: 00:00`;
-        clearInterval(interval_id);
-        endGame(false, Math.floor(count_flipped / 2));
-        run_game = false;
+        clearInterval(intevalId);
+        endGame(false, Math.floor(countFlipped / 2));
+        runGame = false;
     }
 }, 1000);
   }
@@ -252,13 +248,13 @@ function endGame(isWin, attempts = 0, gameTime = 0) {
       FINAL_TIME.textContent = `Ваше время: ${minutes}:${seconds}`;
   };
   } else if (CHOICE_OF_TYPE.value === 'tries') {
-    saveBestScore(CHOICE_OF_DIFFICULTY.value, [cur_attempts, attempts, isWin], 'tries');
+    saveBestScore(CHOICE_OF_DIFFICULTY.value, [curAttempts, attempts, isWin], 'tries');
     if (!isWin) {
       RESULR_TITLE.textContent = 'Вы проиграли';
       FINAL_TIME.textContent = `Ваш результат: ${attempts}`;
     } else {
       RESULR_TITLE.textContent = 'Вы выиграли';
-      FINAL_TIME.textContent = `Отсавшиеся попытки: ${cur_attempts}`;
+      FINAL_TIME.textContent = `Отсавшиеся попытки: ${curAttempts}`;
     }
   } else {
       saveBestScore(CHOICE_OF_DIFFICULTY.value, curTime, 'simple'); 
