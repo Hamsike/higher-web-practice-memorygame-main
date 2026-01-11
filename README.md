@@ -1,4 +1,4 @@
-https://github.com/Hamsike/Hamsike.github.io
+https://github.com/Hamsike/higher-web-practice-memorygame-main
 # Проект игра 'Память'
 ## Оглавление
 - [Макет](#макет)
