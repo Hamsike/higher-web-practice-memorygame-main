@@ -3,9 +3,7 @@ const INIT_GAME = document.querySelector('#game');
 const CHOICE_OF_TYPE = document.querySelector('#game_mode');
 const CHOICE_OF_DIFFICULTY = document.querySelector('#difficulty_level');
 const GAME_TYPE_TITILE = document.querySelector('#type_game');
-const BUTTON_START = document.querySelector('#game_start');
-const RESET_BUTTON = document.querySelector('#reset_button');
-const RESET_SETTINGS = document.querySelector('#reset_settings');
+const buttons = document.querySelectorAll('.button');
 const BEST_RESULTS = document.querySelector('#best_results');
 const GAME_BORDER = document.querySelector('.game_border');
 const CARD_TEMPLATE = document.querySelector('#card_template');
@@ -13,11 +11,9 @@ const FLIPPED_CARDS_TIMEOUT = 500;
 const CUR_RESULT = document.querySelector('#count_pairs');
 const CUR_TIME = document.querySelector('#cur_time');
 const RESULTS = document.querySelector('#results');
-const ITOG_TIME = RESULTS.querySelector('#itog_time');
-const RESET_BUTTON_RESULTS = document.querySelector('#reset_from_results');
-const RESET_SETTINGS_RESULTS = document.querySelector('#change_mode_from_results');
+const FINAL_TIME = RESULTS.querySelector('#final_time');
 const RESULR_TITLE = RESULTS.querySelector('#title_result');
-const DOP_WINDOW = CUR_TIME.closest('#cur_result');
+const DOP_WINDOW = CUR_TIME.closest('#dop_window');
 const BORDER_BEST = BEST_RESULTS.querySelector('.border_best');
 const RECORD = RESULTS.querySelector('#record');
 
@@ -25,15 +21,24 @@ const RECORD = RESULTS.querySelector('#record');
 let FLIPPED_CARDS = [];
 let count_flipped = 0;
 let curTime = 0;
-let IntervalId = null;
+let interval_id = null;
 let cur_attempts = 0;
 let run_game = true;
 
-BUTTON_START.addEventListener('click', startGame);
-RESET_BUTTON.addEventListener('click', resetGame);
-RESET_SETTINGS.addEventListener('click', game);
-RESET_BUTTON_RESULTS.addEventListener('click', resetGame);
-RESET_SETTINGS_RESULTS.addEventListener('click', game);
+buttons.forEach(button =>
+  {
+    button.addEventListener('click', el => {
+      classList = el.target.classList;
+      if (classList.contains('startGame')) {
+        startGame();
+      } else if (classList.contains('buttonRestart')) {
+        resetGame();
+      } else if (classList.contains('buttonChangeMode')) {
+        game();
+      };
+    });
+  }
+)
 CHOICE_OF_TYPE.addEventListener('change', loadBestScores);
 CHOICE_OF_DIFFICULTY.addEventListener('change', loadBestScores);
 
@@ -61,6 +66,7 @@ const ICONS_ARRAY = [
   '🐔',
 ];
 
+// Перевод из с в формат мм:cc
 function time_calc(curTime) {
   let minutes = Math.floor(curTime / 60);
   let seconds = curTime % 60;
@@ -69,19 +75,32 @@ function time_calc(curTime) {
   return [minutes, seconds];
 }
 
+// Выбор сложности для title
+function getDifficultyTitle(difficlty) {
+  switch (difficlty) {
+    case 'easy':
+      return 'легкая';
+    case 'medium':
+      return 'средняя';
+    case 'hard':
+      return 'сложная';
+  };
+}
+
+// Стартовые настройки
 function game() {
   INIT_GAME.classList.replace('show', 'hidden');
   RESULTS.classList.replace('show', 'hidden');
   INIT_SETTINGS.classList.replace('hidden', 'show');
   loadBestScores();
 }
-
+// Функция начала игры
 function startGame() {
   FLIPPED_CARDS = [];
   GAME_BORDER.innerHTML = '';
   count_flipped = 0;
-  clearInterval(IntervalId);
-  IntervalId = null;
+  clearInterval(interval_id);
+  interval_id = null;
   CUR_RESULT.textContent = 'Найдено пар: 0';
   CUR_TIME.textContent = '';
   run_game = true;
@@ -98,19 +117,8 @@ function startGame() {
   } else {
     DOP_WINDOW.classList.replace('show', 'hidden');
   }
-  let DIFFICULTY = '';
-  switch (CHOICE_OF_DIFFICULTY.value) {
-    case 'easy':
-      DIFFICULTY = 'легкая';
-      break;
-    case 'medium':
-      DIFFICULTY = 'средняя';
-      break;
-    case 'hard':
-      DIFFICULTY = 'сложная';
-      break;
-  };
-  GAME_TYPE_TITILE.textContent = `Сложность: ${DIFFICULTY}`;
+  const difficlty = getDifficultyTitle(CHOICE_OF_DIFFICULTY.value);
+  GAME_TYPE_TITILE.textContent = `Сложность: ${difficlty}`;
   const classes = GAME_BORDER.classList;
   if (classes.length < 2) {
     GAME_BORDER.classList.add(CHOICE_OF_DIFFICULTY.value);
@@ -121,14 +129,15 @@ function startGame() {
   INIT_SETTINGS.classList.replace('show', 'hidden');
   INIT_GAME.classList.replace('hidden', 'show');
   RESULTS.classList.replace('show', 'hidden');
+
   createCards();
 }
-
+// Создание поля карт
 function createCards() {
   const resultArray = [];
   const count = DIFFICULTY_SETTINGS[CHOICE_OF_DIFFICULTY.value].pairs;
   const elements = {}
-
+  // Алгоритм доставания рандомных пар из ICONS_ARRAY
   while (resultArray.length < count * 2) {
     const randomIndex = Math.floor(Math.random() * ICONS_ARRAY.length)
     const randomElement = ICONS_ARRAY[randomIndex];
@@ -137,7 +146,7 @@ function createCards() {
       resultArray.push(randomElement, randomElement);
     }
   }
-
+  // Алгоритм перемешивания итогового списка эмодзи и добавления в board
   for (let i = resultArray.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [resultArray[i], resultArray[j]] = [resultArray[j], resultArray[i]];
@@ -151,7 +160,7 @@ function createCards() {
     GAME_BORDER.appendChild(CARD);
   })
 }
-
+// Функция для обработки клика по карте
 function flipCard(card) {
   parent = card.closest('.card');
   if (parent.classList.contains('flipped')) {
@@ -189,10 +198,11 @@ function flipCard(card) {
     CUR_RESULT.textContent = `Найдено пар: ${Math.floor(count_flipped / 2)}`
   }
 }
+// Чек матча на возможность победы и конца количества попыток
 function checkMatch() {
   const flippedcards = document.querySelectorAll('.flipped');
     if (flippedcards.length === DIFFICULTY_SETTINGS[CHOICE_OF_DIFFICULTY.value].pairs * 2) {
-      clearInterval(IntervalId);
+      clearInterval(interval_id);
       endGame(true, Math.floor(count_flipped / 2), curTime);
       run_game = false;
     };
@@ -201,16 +211,16 @@ function checkMatch() {
       run_game = false;
     }
 }
-
+// Оюновление таймера для режима на время и создание секундомера для обычного режима
 function updateTimeDisplay() {
-  if (!IntervalId && CHOICE_OF_TYPE.value === 'simple') {
-    IntervalId = setInterval(() => {
+  if (!interval_id && CHOICE_OF_TYPE.value === 'simple') {
+    interval_id = setInterval(() => {
     curTime++;
 }, 1000);
   }
 
-  if (!IntervalId) {
-    IntervalId = setInterval(() => {
+  if (!interval_id) {
+    interval_id = setInterval(() => {
     curTime--;
     const [minutes, seconds] = time_calc(curTime);
     CUR_TIME.textContent = `Оставшееся количество времени: ${minutes}:${seconds}`;
@@ -218,14 +228,14 @@ function updateTimeDisplay() {
 
     if (curTime < 0 && run_game) {
         CUR_TIME.textContent = `Оставшееся количество времени: 00:00`;
-        clearInterval(IntervalId);
+        clearInterval(interval_id);
         endGame(false, Math.floor(count_flipped / 2));
         run_game = false;
     }
 }, 1000);
   }
 }
-
+// Отображение результатов матча
 function endGame(isWin, attempts = 0, gameTime = 0) {
   setTimeout(() => {
     INIT_GAME.classList.replace('show', 'hidden');
@@ -235,26 +245,26 @@ function endGame(isWin, attempts = 0, gameTime = 0) {
     saveBestScore(CHOICE_OF_DIFFICULTY.value, [curTime, attempts, isWin], 'times');
     if (!isWin) {
       RESULR_TITLE.textContent = 'Вы проиграли';
-      ITOG_TIME.textContent = `Ваш результат: ${attempts}`;
+      FINAL_TIME.textContent = `Ваш результат: ${attempts}`;
   } else {
       RESULR_TITLE.textContent = 'Вы выиграли';
       const [minutes, seconds] = time_calc(curTime);
-      ITOG_TIME.textContent = `Ваше время: ${minutes}:${seconds}`;
+      FINAL_TIME.textContent = `Ваше время: ${minutes}:${seconds}`;
   };
   } else if (CHOICE_OF_TYPE.value === 'tries') {
     saveBestScore(CHOICE_OF_DIFFICULTY.value, [cur_attempts, attempts, isWin], 'tries');
     if (!isWin) {
       RESULR_TITLE.textContent = 'Вы проиграли';
-      ITOG_TIME.textContent = `Ваш результат: ${attempts}`;
+      FINAL_TIME.textContent = `Ваш результат: ${attempts}`;
     } else {
       RESULR_TITLE.textContent = 'Вы выиграли';
-      ITOG_TIME.textContent = `Отсавшиеся попытки: ${cur_attempts}`;
+      FINAL_TIME.textContent = `Отсавшиеся попытки: ${cur_attempts}`;
     }
   } else {
       saveBestScore(CHOICE_OF_DIFFICULTY.value, curTime, 'simple'); 
       RESULR_TITLE.textContent = 'Вы выиграли';
       const [minutes, seconds] = time_calc(curTime);
-      ITOG_TIME.textContent = `Ваш результат: ${minutes}:${seconds}`;
+      FINAL_TIME.textContent = `Ваш результат: ${minutes}:${seconds}`;
   }
   const best_result = localStorage.getItem(`${CHOICE_OF_TYPE.value} - ${CHOICE_OF_DIFFICULTY.value}`);
   if (!best_result) {
@@ -273,7 +283,7 @@ function endGame(isWin, attempts = 0, gameTime = 0) {
   }
   }, 250);
 }
-
+// Получение результатов матча и обновление рекордов при необходимости
 function saveBestScore(mode, value, valueType) {
   const best_result = localStorage.getItem(`${valueType} - ${mode}`);
   if (valueType === 'simple') {
@@ -297,17 +307,13 @@ function saveBestScore(mode, value, valueType) {
        };
     }
     else {
-      if (!best_result) {
+      if (!best_result || (Number(best_result) < value[1])) {
         localStorage.setItem(`${valueType} - ${mode}`, `${value[1]} false`);
-      } else {
-        if (Number(best_result) < value[1]) {
-          localStorage.setItem(`${valueType} - ${mode}`, `${value[1]} false`);
-        };
       };
     };
   };
 }
-
+// Отображение рекордов
 function loadBestScores() {
   const best_result = localStorage.getItem(`${CHOICE_OF_TYPE.value} - ${CHOICE_OF_DIFFICULTY.value}`);
   if (!best_result) {
@@ -326,11 +332,11 @@ function loadBestScores() {
   }
 }
 
-
+// Функйия рестарта
 function resetGame() {
   startGame();
 }
-
+// Инициализация настроек
 document.addEventListener('DOMContentLoaded', () => {
   game();
 });

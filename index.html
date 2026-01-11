@@ -12,7 +12,7 @@
   </head>
   <body class="body">
     <div id="init_settings" class="init show">
-      <h2 class="game_name">Игра "Память"</h2>
+      <h1 class="game_name">Игра "Память"</h1>
       <form class="settings">
         <div class="type_settings">
           <label for="game_mode" class="text_subtitle">Режим игры</label>
@@ -31,7 +31,7 @@
           </select>
         </div>
       </form>
-      <button id="game_start" class="button">Начать игру</button>
+      <button id="game_start" class="button startGame">Начать игру</button>
       <div id="best_results" class="border show">
         <h3 class="text_subtitle">Лучшие результаты</h3>
         <div class="border_best">
@@ -45,7 +45,7 @@
         <div id="cur_result" class="border show">
           <div id="count_pairs" class="text_low"></div>
         </div>
-        <div id="cur_result" class="border hidden">
+        <div id="dop_window" class="border hidden">
           <div id="cur_time" class="text_low"></div>
         </div>
       </div>
@@ -54,22 +54,22 @@
         </ul>
       </div>
       <div class="settings">
-        <button id="reset_button" class="button">Сначала</button>
-        <button id="reset_settings" class="button">Сменить режим</button>
+        <button id="reset_button" class="button buttonRestart">Сначала</button>
+        <button id="reset_settings" class="button buttonChangeMode">Сменить режим</button>
       </div>
     </div>
     <div id="results" class="init hidden">
       <h2 id="type_game" class="game_name">Результаты</h2>
-      <h3 id="title_result">Вы проиграли</h3>
+      <h3 id="title_result"></h3>
       <div id="results_itog" class="border show">
         <div class="text_subtitle">Ваш результат</div>
-        <div id="itog_time" class="text_low"></div>
+        <div id="final_time" class="text_low"></div>
         <div class="text_subtitle">Ваш рекорд</div>
         <div id="record" class="text_low"></div>
       </div>
       <div class="settings">
-        <button id="reset_from_results" class="button">Сначала</button>
-        <button id="change_mode_from_results" class="button">Сменить режим</button>
+        <button id="reset_from_results" class="button buttonRestart">Сначала</button>
+        <button id="change_mode_from_results" class="button buttonChangeMode">Сменить режим</button>
       </div>
     </div>
     <script
